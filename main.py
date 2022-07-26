@@ -54,6 +54,13 @@ snail_index = 0
 snail = snail_walk[snail_index]
 snail_rect = snail.get_rect(midbottom = (750, 300))
 
+# Fly
+fly_1 = pg.image.load("graphics\\fly\\fly1.png").convert_alpha()  # Covert_alpha works with transparent pixels
+fly_2 = pg.image.load("graphics\\fly\\fly2.png").convert_alpha()
+fly_walk = [fly_1, fly_2]
+fly_index = 0
+fly = fly_walk[fly_index]
+fly_rect = fly.get_rect(midbottom = (750, 200))
 
 # Player
 player_stand = pg.image.load("graphics\player\player_stand.png").convert_alpha()
@@ -75,6 +82,8 @@ player_rect = player.get_rect(midbottom = (80,300))
 snail_timer = pg.USEREVENT + 1
 pg.time.set_timer(snail_timer, 500)
 
+fly_timer = pg.USEREVENT + 2
+pg.time.set_timer(fly_timer, 200)
 
 gravity = 0
 
@@ -91,6 +100,7 @@ while True:
              # End Screen
             if event.type == pg.KEYDOWN:
                 snail_rect.left = 800
+                fly_rect.left = 800
                 GAME_ACTIVE = True
                 start_time = time
                 
@@ -105,6 +115,11 @@ while True:
                 if snail_index == 1 : snail_index = 0
                 else: snail_index = 1
                 snail = snail_walk[snail_index]
+
+            if event.type == fly_timer:
+                if fly_index == 1 : fly_index = 0
+                else: fly_index = 1
+                fly = fly_walk[fly_index]
 
         
                
@@ -129,11 +144,15 @@ while True:
         screen.blit(player,player_rect)
 
 
-        snail_rect.x -= 6  # Get X position
+        snail_rect.x -= 4  # Get X position
         if snail_rect.right <= 0 : snail_rect.left = WIDTH
         screen.blit(snail, snail_rect)
 
-        if player_rect.colliderect(snail_rect):
+        fly_rect.x -= 6  # Get X position
+        if fly_rect.right <= 0 : fly_rect.left = WIDTH
+        screen.blit(fly, fly_rect)
+
+        if player_rect.colliderect(snail_rect) or player_rect.colliderect(fly_rect):
             GAME_ACTIVE = False
 
         
